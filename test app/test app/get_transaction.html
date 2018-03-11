@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test App - Get data</title>
+</head>
+<body>
+
+	<a href="/get_data">Get data</a>
+	<a href="/store_data">Store data</a>
+	<a href="/get_transaction">Get transaction</a>
+	<a href="/get_all_transactions">Get all transactions</a>
+	<br>
+
+	<form action="http://localhost:8080/get_transaction" method="POST">
+		Transaction hash:<br>
+		<input type="text" name="hash">
+		<br><br>
+		<input type="submit" value="Submit">
+	</form> 
+
+</body>
+</html>

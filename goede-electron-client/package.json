@@ -1,0 +1,21 @@
+{
+  "name": "goede-electron-client",
+  "version": "0.1.0",
+  "description": "A client for openchain",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "vbozhko",
+  "license": "WTFPL",
+  "devDependencies": {
+    "electron": "~1.8.2"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "jquery": "^3.3.1",
+    "mithril": "^1.1.6",
+    "openchain": "^0.2.4",
+    "skeleton-css": "^2.0.4"
+  }
+}

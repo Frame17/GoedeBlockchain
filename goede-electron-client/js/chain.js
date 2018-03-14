@@ -18,9 +18,9 @@ var chain = {
     loadKeyFromMnemonic: function (mnemonic) {
         if(Mnemonic.isValid(mnemonic)) {
             var code = new Mnemonic(mnemonic);
-            this.privateKey = new bitcore.HDPrivateKey(code.toHDPrivateKey(null, "livenet").xprivkey.data);
-            this.privateKey.network = bitcore.Networks.get("openchain");
-            this.derivedKey = this.privateKey.derive(44, true).derive(64, true).derive(0, true).derive(0).derive(0);
+            var privateKey = new bitcore.HDPrivateKey(code.toHDPrivateKey(null, "livenet").xprivkey);
+            privateKey.network = bitcore.Networks.get("openchain");
+            this.derivedKey = privateKey.derive(44, true).derive(64, true).derive(0, true).derive(0).derive(0);
             this.loadKeyData();
             return true;
         }
@@ -31,7 +31,7 @@ var chain = {
         // Calculate the accounts corresponding to the private key
         this.dataPath = "/asset/p2pkh/" + this.address + "/metadata/";
 
-        this.signer = new openchain.MutationSigner(this.privateKey);
+        //this.signer = new openchain.MutationSigner(this.privateKey);
     }
 }
 

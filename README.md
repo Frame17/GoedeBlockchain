@@ -22,7 +22,8 @@ rm -r node_modules/openchain/node_modules/bitcore-lib
 npm start
 ```
 
-##Implemented features
+## Implemented features
 - Getting the private key and wallet address from mnemonic phrase
+- Saving and retrieving data from chain
 
 Good luck with this app!

@@ -3,7 +3,7 @@
 This is a minimal client for GoedeBlockchain written with Electron and Mithril.js
 Has almost no functionality for now
 
-## To Use
+## To use
 
 To use app, clone and run this repository:
 
@@ -20,7 +20,8 @@ rm -r node_modules/openchain/node_modules/bitcore-lib
 npm start
 ```
 
-##Implemented features
+## Implemented features
 - Getting the private key and wallet address from mnemonic phrase
+- Saving and retrieving data from chain
 
 Good luck with this app!

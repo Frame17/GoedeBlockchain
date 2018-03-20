@@ -6,6 +6,25 @@ const m = require('mithril')
 
 //Views
 var LoginComponent = {
+    password: "",
+    setPassword: function(pwd) { this.password = pwd },
+    login: function() {
+        if(filesystem.unlock(this.password) != "Error") {
+            authorize(filesystem.mnemonic)
+        } else {
+            alert("Incorrect password")
+        }
+    },
+    view: function() {
+        return m("div", [
+            m("h2", {class: "title"}, "Goede Client Login"),
+            m("input", {type: "password", name: "pwd", placeholder: "Master password", oninput: m.withAttr("value", this.setPassword.bind(this)), value: this.password}),
+            m("button", {class: "button-primary", onclick: this.login.bind(this)}, "Login"),
+        ])
+    }
+}
+
+var RegisterComponent = {
     username: "",
     password: "",
     setUsername: function(name) { this.username = name },
@@ -16,10 +35,10 @@ var LoginComponent = {
     },
     view: function() {
         return m("div", [
-            m("h2", {class: "title"}, "Goede Client"),
-            m("input", {type: "text", name: "seed", oninput: m.withAttr("value", this.setUsername.bind(this)), value: this.username}),
-            m("input", {type: "password", name: "pwd", oninput: m.withAttr("value", this.setPassword.bind(this)), value: this.password}),
-            m("button", {class: "button-primary", onclick: this.login.bind(this)}, "Load data"),
+            m("h2", {class: "title"}, "Goede Client Registration"),
+            m("input", {type: "text", name: "seed", placeholder: "Passphrase", oninput: m.withAttr("value", this.setUsername.bind(this)), value: this.username}),
+            m("input", {type: "password", name: "pwd", placeholder: "New master password", oninput: m.withAttr("value", this.setPassword.bind(this)), value: this.password}),
+            m("button", {class: "button-primary", onclick: this.login.bind(this)}, "Save credentials"),
         ])
     }
 }
@@ -62,7 +81,12 @@ function retrieveData(key) {
     return chain.retrieveData(key)
 }
 
-m.route(root, "/login", {
+m.route(root, "/register", {
+    "/register": RegisterComponent,
     "/login": LoginComponent,
     "/wallet": WalletComponent
 })
+
+if(filesystem.mnemonicFileExists()) {
+    m.route.set("/login")
+}

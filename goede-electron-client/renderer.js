@@ -1,4 +1,5 @@
 const chain = require('./js/chain.js')
+const filesystem = require('./js/filesystem.js')
 
 //UI Section
 const m = require('mithril')
@@ -6,16 +7,18 @@ const m = require('mithril')
 //Views
 var LoginComponent = {
     username: "",
-    setUsername: function(name) {
-        this.username = name
-    },
+    password: "",
+    setUsername: function(name) { this.username = name },
+    setPassword: function(pwd) { this.password = pwd },
     login: function() {
+        filesystem.writeMnemonicToFile(this.username, this.password)
         authorize(this.username)
     },
     view: function() {
         return m("div", [
             m("h2", {class: "title"}, "Goede Client"),
             m("input", {type: "text", name: "seed", oninput: m.withAttr("value", this.setUsername.bind(this)), value: this.username}),
+            m("input", {type: "password", name: "pwd", oninput: m.withAttr("value", this.setPassword.bind(this)), value: this.password}),
             m("button", {class: "button-primary", onclick: this.login.bind(this)}, "Load data"),
         ])
     }
@@ -31,13 +34,13 @@ var WalletComponent = {
     view: function() {
         return m("div", [
             m("h3", chain.address.toString()),
-            m("div", {class: "row"}, [ 
+            m("div", {class: "row"}, [
                 m("input", {class: "six columns", type: "text", placeholder: "Key", name: "key", oninput: m.withAttr("value", this.setKey.bind(this)), value: this.key})
             ]),
-            m("div", {class: "row"}, [ 
+            m("div", {class: "row"}, [
                 m("input", {class: "six columns", type: "text", placeholder: "Value", name: "value", oninput: m.withAttr("value", this.setValue.bind(this)), value: this.value})
             ]),
-            m("div", {class: "row"}, [ 
+            m("div", {class: "row"}, [
                 m("button", {class: "three columns", onclick: this.storeData.bind(this)}, "Store"),
                 m("button", {class: "three columns", onclick: this.retrieveData.bind(this)}, "Retrieve")
             ])

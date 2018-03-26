@@ -67,6 +67,28 @@ var WalletComponent = {
             m("div", {class: "row"}, [
                 m("button", {class: "three columns", onclick: this.storeData.bind(this)}, "Store"),
                 m("button", {class: "three columns", onclick: this.retrieveData.bind(this)}, "Retrieve")
+            ]),
+            m("div", {class: "row"}, [
+                m("a", {href: "#!/data"}, "Your data")
+            ])
+        ])
+    }
+}
+
+var DataComponent = {
+    setName: function(val) { filesystem.data.name = val },
+    setAddress: function(val) { filesystem.data.address = val },
+    view: function() {
+        return m("div", [
+            m("h3", "Your data"),
+            m("div", {class: "row"}, [
+                m("input", {class: "six columns", type: "text", placeholder: "Name", name: "name", oninput: m.withAttr("value", this.setName.bind(this)), value: filesystem.data.name})
+            ]),
+            m("div", {class: "row"}, [
+                m("input", {class: "six columns", type: "text", placeholder: "Name", name: "address", oninput: m.withAttr("value", this.setAddress.bind(this)), value: filesystem.data.address})
+            ]),
+            m("div", {class: "row"}, [
+                m("button", {class: "three columns", onclick: writeUserData}, "Save")
             ])
         ])
     }
@@ -86,10 +108,15 @@ function retrieveData(key) {
     return chain.retrieveData(key)
 }
 
+function writeUserData() {
+    filesystem.writeData()
+}
+
 m.route(root, "/register", {
     "/register": RegisterComponent,
     "/login": LoginComponent,
-    "/wallet": WalletComponent
+    "/wallet": WalletComponent,
+    "/data": DataComponent
 })
 
 if(filesystem.mnemonicFileExists()) {

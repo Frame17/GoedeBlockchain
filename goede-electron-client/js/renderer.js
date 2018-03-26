@@ -16,15 +16,11 @@ var LoginComponent = {
             alert("Incorrect password")
         }
     },
-    teest: function() {
-        p2p.testConnection();
-    },
     view: function() {
         return m("div", [
             m("h2", {class: "title"}, "Goede Client Login"),
             m("input", {type: "password", name: "pwd", placeholder: "Master password", oninput: m.withAttr("value", this.setPassword.bind(this)), value: this.password}),
             m("button", {class: "button-primary", onclick: this.login.bind(this)}, "Login"),
-            m("button", {class: "button-primary", onclick: this.teest.bind(this)}, "Test"),
         ])
     }
 }

@@ -1,23 +1,28 @@
 $(document).ready(function() {
 
-    peer1 = new Peer({ host:'bozhko.net',port:'9000', debug: 3});
-    peer2 = new Peer({ host:'bozhko.net',port:'9000', debug: 3});
+    var peer = new Peer('a',{ host:'bozhko.net',port:'9000', debug: 3});
+    var peer2 = new Peer('b',{ host:'bozhko.net',port:'9000', debug: 3});
+    var connectedPeers ={};
 
-    peer1.on('open', function(id){
-        peerId1 = id;
-        var connection = peer2.connect(peerId1);
-        connection.on('data', function(data) {
-            console.log(data , peerId1);
-            connection.send(' peer');
-        });
-    });
+    sendData(peer2 , peer , "Hello ,");
 
-    peer1.on('connection', function(connection) {
-        connection.on('open', function() {
-            connection.send('Hello,');
-        });
-        connection.on('data', function(data) {
-            console.log(data);
-        });
-    });
+    peer.on('connection',getData);
+
+    sendData(peer2 , peer , ' world!');
 });
+
+function getData(connection) {
+    connection.on('data',function (data) {
+        console.log('Recieved:' , data);
+    });
+};
+
+function sendData(from_peer , to_peer , data) {
+    to_peer.on('open',function(id){
+        var connection = from_peer.connect(id);
+        connection.on('open',function () {
+            connection.send(data);
+            console.log('Send:',data);
+        });
+    });
+}

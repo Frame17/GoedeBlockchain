@@ -1,15 +1,20 @@
 $(document).ready(function() {
 
-    var peer = new Peer('a',{ host:'bozhko.net',port:'9000', debug: 3});
-    var peer2 = new Peer('b',{ host:'bozhko.net',port:'9000', debug: 3});
-    var connectedPeers ={};
+    // Peer's id equals to user's e-mail
+    var peer = createPeer('a');
+    var peer2 = createPeer('b');
 
-    sendData(peer2 , peer , "Hello ,");
-
+    //Await connections from other peers
     peer.on('connection',getData);
 
-    sendData(peer2 , peer , ' world!');
+    //Send data to our peer
+    sendData(peer2 , peer.id , ' world!');
 });
+
+function createPeer(id) {
+    peer = new Peer(id,{host:'bozhko.net',port:'9000', debug: 3})
+    return peer;
+}
 
 function getData(connection) {
     connection.on('data',function (data) {
@@ -17,12 +22,10 @@ function getData(connection) {
     });
 };
 
-function sendData(from_peer , to_peer , data) {
-    to_peer.on('open',function(id){
-        var connection = from_peer.connect(id);
+function sendData(from_peer , to_peer_id , data) {
+        var connection = from_peer.connect(to_peer_id);
         connection.on('open',function () {
             connection.send(data);
             console.log('Send:',data);
         });
-    });
 }

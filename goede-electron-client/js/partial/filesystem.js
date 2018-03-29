@@ -2,6 +2,10 @@ const fs = require('fs')
 const bitcore = require("bitcore-lib")
 const ECIES = require("bitcore-ecies")
 const Mnemonic = require("bitcore-mnemonic")
+const PropertiesReader = require('properties-reader');
+
+// Loading properties file
+var properties = PropertiesReader('properties.txt');
 
 var filesystem = {
     data: undefined,
@@ -16,18 +20,18 @@ var filesystem = {
     mnemonic: "",
     //Checks the availability of all the files required
     filesExist: function() {
-        return fs.existsSync("data.txt") && this.mnemonicFileExists()
+        return fs.existsSync(properties.path().data.file) && this.mnemonicFileExists()
     },
     //Checks the availability of file storing mnemonic
     mnemonicFileExists: function() {
-        return fs.existsSync("mnemonic.txt")
+        return fs.existsSync(properties.path().mnemonic.file)
     },
     //Loads and decrypts mnemonic from mnemonic.txt using user's master password
     loadMnemonicFromFile: function(password) {
         if(!this.mnemonicFileExists())
             return "Error: File not found";
 
-        var buf = Buffer.from(fs.readFileSync("mnemonic.txt").toString(), 'hex')
+        var buf = Buffer.from(fs.readFileSync(properties.path().mnemonic.file).toString(), 'hex')
         var value = new Buffer(password)
         var hash = bitcore.crypto.Hash.sha256(value)
         var bn = bitcore.crypto.BN.fromBuffer(hash)
@@ -53,7 +57,7 @@ var filesystem = {
 
         var encryptor = ECIES().privateKey(key).publicKey(key.publicKey)
         var buf = encryptor.encrypt(mnemonic);
-        fs.writeFileSync("mnemonic.txt", buf.toString('hex'))
+        fs.writeFileSync(properties.path().mnemonic.file, buf.toString('hex'))
 
         console.log(this.loadMnemonicFromFile(password))
     },
@@ -67,7 +71,7 @@ var filesystem = {
         var bn = bitcore.crypto.BN.fromBuffer(hash)
         var key = new bitcore.PrivateKey(bn)
 
-        var buf = Buffer.from(fs.readFileSync("data.txt").toString(), 'hex')
+        var buf = Buffer.from(fs.readFileSync(properties.path().data.file).toString(), 'hex')
         var decryptor = ECIES().privateKey(key)
         var decrypted = decryptor.decrypt(buf).toString()
 
@@ -87,7 +91,7 @@ var filesystem = {
 
         var encryptor = ECIES().privateKey(key).publicKey(key.publicKey)
         var buf = encryptor.encrypt(JSON.stringify(this.data));
-        fs.writeFileSync("data.txt", buf.toString('hex'))
+        fs.writeFileSync(properties.path().data.file, buf.toString('hex'))
     },
     //Tries to load user data using password
     unlock: function(password) {

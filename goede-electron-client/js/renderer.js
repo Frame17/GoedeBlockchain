@@ -1,6 +1,8 @@
 const chain = require('./partial/chain.js')
 const filesystem = require('./partial/filesystem.js')
-const p2p = require('./partial/p2p.js');
+const p2p = require('./partial/p2p.js')
+
+exports.Peer = undefined
 
 //UI Section
 const m = require('mithril')
@@ -118,3 +120,12 @@ m.route(root, "/register", {
 if(filesystem.mnemonicFileExists()) {
     m.route.set("/login")
 }
+
+var peer = p2p.createPeer('lol');
+var peer2 = p2p.createPeer('kek');
+
+//Await connections from other peers
+peer.on('connection', p2p.getData);
+
+//Send data to our peer
+p2p.sendData(peer2, peer.id, ' world!');

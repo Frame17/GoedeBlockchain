@@ -1,7 +1,7 @@
 const fs = require('fs')
 const bitcore = require("bitcore-lib")
 const ECIES = require("bitcore-ecies")
-const Mnemonic = require("bitcore-mnemonic");
+const Mnemonic = require("bitcore-mnemonic")
 
 var filesystem = {
     data: undefined,

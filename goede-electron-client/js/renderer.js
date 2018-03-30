@@ -179,3 +179,4 @@ m.route(root, "/register", {
 
 if(filesystem.mnemonicFileExists()) {
     m.route.set("/login")
+}

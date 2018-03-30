@@ -121,8 +121,8 @@ if(filesystem.mnemonicFileExists()) {
     m.route.set("/login")
 }
 
-var peer = p2p.createPeer('lol');
-var peer2 = p2p.createPeer('kek');
+var peer = p2p.createPeer('kfmrovmr');
+var peer2 = p2p.createPeer('rtkjigrt');
 
 //Await connections from other peers
 peer.on('connection', p2p.getData);

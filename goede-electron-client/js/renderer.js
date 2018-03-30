@@ -8,12 +8,15 @@ exports.Peer = undefined
 //UI Section
 const m = require('mithril')
 
+var peer = undefined
+
 //Views
 var LoginComponent = {
     password: "",
     setPassword: function(pwd) { this.password = pwd },
     login: function() {
         if(filesystem.unlock(this.password) != "Error") {
+            initPeer(filesystem.data.address)
             authorize(filesystem.mnemonic)
         } else {
             alert("Incorrect password")
@@ -45,6 +48,7 @@ var RegisterComponent = {
             address: this.email
         })
 
+        initPeer(this.email)
         authorize(this.username)
     },
     generatePassphrase: function() {
@@ -53,7 +57,7 @@ var RegisterComponent = {
     view: function() {
         return m("div", [
             m("h2", {class: "title"}, "Goede Client Registration"),
-            m("input", {type: "text", name: "email", placeholder: "Email", oninput: m.withAttr("value", this.setEmail.bind(this)), value: this.email}),
+            m("input", {type: "email", name: "email", placeholder: "Email", oninput: m.withAttr("value", this.setEmail.bind(this)), value: this.email}),
             m("input", {type: "text", name: "seed", placeholder: "Passphrase", oninput: m.withAttr("value", this.setUsername.bind(this)), value: this.username}),
             m("input", {type: "password", name: "pwd", placeholder: "New master password", oninput: m.withAttr("value", this.setPassword.bind(this)), value: this.password}),
             m("button", {class: "button-primary", onclick: this.generatePassphrase.bind(this)}, "Generate new passphrase"),
@@ -84,6 +88,9 @@ var WalletComponent = {
             ]),
             m("div", {class: "row"}, [
                 m("a", {href: "#!/data"}, "Your data")
+            ]),
+            m("div", {class: "row"}, [
+                m("a", {href: "#!/peer"}, "P2P")
             ])
         ])
     }
@@ -99,10 +106,37 @@ var DataComponent = {
                 m("input", {class: "six columns", type: "text", placeholder: "Name", name: "name", oninput: m.withAttr("value", this.setName.bind(this)), value: filesystem.data.name})
             ]),
             m("div", {class: "row"}, [
-                m("input", {class: "six columns", type: "text", placeholder: "Name", name: "address", oninput: m.withAttr("value", this.setAddress.bind(this)), value: filesystem.data.address})
+                m("input", {class: "six columns", type: "email", placeholder: "Name", name: "address", oninput: m.withAttr("value", this.setAddress.bind(this)), value: filesystem.data.address})
             ]),
             m("div", {class: "row"}, [
                 m("button", {class: "three columns", onclick: writeUserData}, "Save")
+            ]),
+            m("div", {class: "row"}, [
+                m("a", {href: "#!/wallet"}, "Wallet")
+            ])
+        ])
+    }
+}
+
+var PeerComponent = {
+    data: "",
+    receiverAddress: "",
+    setData: function(val) { this.data = val },
+    setReceiverAddress: function(val) { this.receiverAddress = val },
+    sendData: function() {
+        p2p.sendData(peer, this.receiverAddress, this.data);
+    },
+    view: function() {
+        return m("div", [
+            m("h3", "Send data"),
+            m("div", {class: "row"}, [
+                m("input", {class: "six columns", type: "text", placeholder: "Data", name: "data", oninput: m.withAttr("value", this.setData.bind(this)), value: this.data})
+            ]),
+            m("div", {class: "row"}, [
+                m("input", {class: "six columns", type: "email", placeholder: "Send to", name: "receiverAddress", oninput: m.withAttr("value", this.setReceiverAddress.bind(this)), value: this.receiverAddress})
+            ]),
+            m("div", {class: "row"}, [
+                m("button", {class: "three columns", onclick: this.sendData.bind(this)}, "Send")
             ]),
             m("div", {class: "row"}, [
                 m("a", {href: "#!/wallet"}, "Wallet")
@@ -129,27 +163,19 @@ function writeUserData() {
     filesystem.writeData()
 }
 
+function initPeer(address) {
+    peer = p2p.createPeer(address);
+    //Await connections from other peers
+    peer.on('connection', p2p.getData);
+}
+
 m.route(root, "/register", {
     "/register": RegisterComponent,
     "/login": LoginComponent,
     "/wallet": WalletComponent,
-    "/data": DataComponent
+    "/data": DataComponent,
+    "/peer": PeerComponent
 })
 
 if(filesystem.mnemonicFileExists()) {
     m.route.set("/login")
-}
-
-<<<<<<< HEAD
-var peer = p2p.createPeer('kfmrovmr');
-var peer2 = p2p.createPeer('rtkjigrt');
-=======
-var peer = p2p.createPeer('lol');
-var peer2 = p2p.createPeer('kek');
->>>>>>> dac84a536c6d8bcb6757d6f40a2f11fd9de68c5d
-
-//Await connections from other peers
-peer.on('connection', p2p.getData);
-
-//Send data to our peer
-p2p.sendData(peer2, peer.id, ' world!');

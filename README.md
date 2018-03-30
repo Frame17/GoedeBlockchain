@@ -16,8 +16,9 @@ git clone https://github.com/vladiklem/GoedeBlockchain.git
 cd GoedeBlockchain/goede-electron-client
 # Install dependencies
 npm install
-#remove duplicate bitcore-lib
+#remove duplicates bitcore-lib
 rm -r node_modules/openchain/node_modules/bitcore-lib
+rm -r node_modules/bitcore-ecies/node_modules/bitcore-lib
 # Run the app
 npm start
 ```

@@ -1,6 +1,13 @@
+// Loading properties file
+const PropertiesReader = require('properties-reader');
+var properties = PropertiesReader('properties.txt');
+
 var p2p = {
     createPeer: function (id) {
-        peer = new global.Peer(id, { host: 'bozhko.net', port: '9000', debug: 3 })
+        peer = new global.Peer(id, {
+            host: properties.path().p2p.host,
+            port: properties.path().p2p.port,
+            debug: 3 })
         return peer
     },
     sendData: function (from_peer, to_peer_id, data) {

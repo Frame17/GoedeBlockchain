@@ -1,0 +1,8 @@
+mainWindow.width = 800
+mainWindow.height = 600
+
+data.file = data.txt
+mnemonic.file = mnemonic.txt
+
+p2p.host = bozhko.net
+p2p.port = 9000

@@ -1,5 +1,6 @@
 const electron = require('electron')
 const openchain = require('openchain')
+const PropertiesReader = require('properties-reader')
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
@@ -8,13 +9,19 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
+// Loading properties file
+const properties = PropertiesReader('properties.txt')
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow = new BrowserWindow({
+    width: properties.path().mainWindow.width,
+    height: properties.path().mainWindow.height
+  })
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({

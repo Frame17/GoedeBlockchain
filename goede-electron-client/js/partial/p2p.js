@@ -20,6 +20,7 @@ var p2p = {
     getData: function (connection) {
         connection.on('data', function (data) {
             console.log('Recieved:', data);
+            alert('Recieved:', data);
         });
     }
 }

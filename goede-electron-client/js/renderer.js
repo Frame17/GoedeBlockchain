@@ -1,6 +1,7 @@
 const chain = require('./partial/chain.js')
 const filesystem = require('./partial/filesystem.js')
 const p2p = require('./partial/p2p.js')
+const Mnemonic = require("bitcore-mnemonic");
 
 exports.Peer = undefined
 
@@ -23,25 +24,40 @@ var LoginComponent = {
             m("h2", {class: "title"}, "Goede Client Login"),
             m("input", {type: "password", name: "pwd", placeholder: "Master password", oninput: m.withAttr("value", this.setPassword.bind(this)), value: this.password}),
             m("button", {class: "button-primary", onclick: this.login.bind(this)}, "Login"),
+            m("div", {class: "row"}, [
+                m("a", {href: "#!/register"}, "Register")
+            ])
         ])
     }
 }
 
 var RegisterComponent = {
+    email: "",
     username: "",
     password: "",
+    setEmail: function(email) { this.email = email },
     setUsername: function(name) { this.username = name },
     setPassword: function(pwd) { this.password = pwd },
     login: function() {
         filesystem.writeMnemonicToFile(this.username, this.password)
+        filesystem.setData({
+            name: "",
+            address: this.email
+        })
+
         authorize(this.username)
+    },
+    generatePassphrase: function() {
+        this.username = new Mnemonic().toString()
     },
     view: function() {
         return m("div", [
             m("h2", {class: "title"}, "Goede Client Registration"),
+            m("input", {type: "text", name: "email", placeholder: "Email", oninput: m.withAttr("value", this.setEmail.bind(this)), value: this.email}),
             m("input", {type: "text", name: "seed", placeholder: "Passphrase", oninput: m.withAttr("value", this.setUsername.bind(this)), value: this.username}),
             m("input", {type: "password", name: "pwd", placeholder: "New master password", oninput: m.withAttr("value", this.setPassword.bind(this)), value: this.password}),
-            m("button", {class: "button-primary", onclick: this.login.bind(this)}, "Save credentials"),
+            m("button", {class: "button-primary", onclick: this.generatePassphrase.bind(this)}, "Generate new passphrase"),
+            m("button", {class: "button-primary", onclick: this.login.bind(this)}, "Save credentials")
         ])
     }
 }
@@ -87,6 +103,9 @@ var DataComponent = {
             ]),
             m("div", {class: "row"}, [
                 m("button", {class: "three columns", onclick: writeUserData}, "Save")
+            ]),
+            m("div", {class: "row"}, [
+                m("a", {href: "#!/wallet"}, "Wallet")
             ])
         ])
     }

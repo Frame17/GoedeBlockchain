@@ -11,7 +11,9 @@ var p2p = {
         return peer
     },
     sendData: function (from_peer, to_peer_id, data) {
+        console.log("Waiting connection.");
         var connection = from_peer.connect(to_peer_id)
+        console.log("Waiting open.");
         connection.on('open', function () {
             connection.send(data)
             console.log('Send:', data)

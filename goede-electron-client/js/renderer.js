@@ -167,6 +167,10 @@ function initPeer(address) {
     peer = p2p.createPeer(address);
     //Await connections from other peers
     peer.on('connection', p2p.getData);
+    peer.on('error', function(err) {
+        console.log(err);
+    })
+
 }
 
 m.route(root, "/register", {
@@ -179,3 +183,4 @@ m.route(root, "/register", {
 
 if(filesystem.mnemonicFileExists()) {
     m.route.set("/login")
+}

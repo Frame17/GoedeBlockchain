@@ -183,4 +183,8 @@ m.route(root, "/register", {
 
 if(filesystem.mnemonicFileExists()) {
     m.route.set("/login")
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1d0a8d2953b3f59aed8ffddf01d0ede868472086
